@@ -7,19 +7,45 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
+<script src="./compile.js"></script>
 <script src="./main.js"></script>
 <body>
- <div id="app">
-    <p>这是{{a}}</p>
-    <p>这是{{b}}</p>
- </div>
+    <div id="app">
+        <!-- 插值绑定 -->
+        <p>{{name}}</p>
+        <!-- 指令解析 -->
+        <p k-text="name"></p>
+        <p>{{age}}</p>
+        <p>
+          {{doubleAge}}
+        </p>
+        <!-- 双向绑定 -->
+        <input type="text" k-model="name" />
+        <!-- 事件处理 -->
+        <button @click="changeName">呵呵</button>
+        <!-- html内容解析 -->
+        <div k-html="html"></div>
+      </div>
 </body>
 <script>
-var vm = new Lue({
+var vm = new Vue({
     el: '#app',
     data: {
-        a:1,
-        b:2
-    }
+          name: "I am test.",
+          age: 12,
+          html: "<button>这是一个按钮</button>"
+        },
+        created() {
+          console.log("开始啦");
+          setTimeout(() => {
+            this.name = "我是测试";
+          }, 1500);
+        },
+        methods: {
+          changeName() {
+            this.name = "哈喽，开课吧";
+            this.age = 1;
+          }
+        }
 })
 </script>

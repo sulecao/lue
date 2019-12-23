@@ -1,61 +1,62 @@
 
-
-function Lue(options) {
+class Vue{
+  constructor(options){
     this.$options = options
-    var data = this._data = this.$options.data
-    observe(data)
-    for(let key in data){
-        Object.defineProperty(this,key,{
-            configurable: true,//可删除
-            enumerable: true,//可枚举
-            get(){
-                return this._data[key]
-            },
-            set(newVal){
-                this._data[key] = newVal
-            }
-        })
+    this.$data = options.data
+    // 观察data属性
+    this.observe(this.$data);
+
+    new Compile(options.el, this);
+
+    if (options.created) {
+        options.created.call(this);
     }
-    new Compile(options.el,this)
+
+  }
+
+  observe(data){
+    if (!data || typeof data !== "object") {
+        return;
+      }
+      Object.keys(data).forEach(key=>{
+        this.defineReactive(data,key,data[key])
+        // 将数据都代理到vm上
+        this.proxyData(key);
+      })
+ 
+  }
+  defineReactive(obj,key,val){
+    // val也可能还是对象，继续观察
+    this.observe(val)
+
+    Object.defineProperty(obj,key,{
+        get(){
+            return val
+        },
+        set(newVal){
+            if(val ===newVal ){
+                return
+            }else{
+                val = newVal
+                console.log('数据变化了')
+            }
+          
+        }
+    })
+  }
+
+  proxyData(key){
+    Object.defineProperty(this,key,{
+        get(){
+            return this.$data[key]
+        },
+        set(newVal){
+
+        this.$data[key] = newVal
+          
+        }
+    })
+  }
 }
 
-function Compile(el,vm){
-    var app = document.querySelector(el)
-    var fragment  = document.createDocumentFragment(),child;
-    while(child=app.firstChild){
-        fragment.appendChild(child)
-    }
-    console.log(fragment)
-}
-
-function Observe(data) {
-    for (let key in data) {
-        let val = data[key]
-        observe(val)
-        Object.defineProperty(data, key, {
-            configurable: true,//可删除
-            enumerable: true,//可枚举
-            get() {
-                return val
-            }, set(newVal) {
-                if( newVal===val){
-                    return
-                }else{
-                    console.log(this)
-                    val = newVal
-                    observe(newVal)
-                }
-                
-            }
-        })
-    }
-}
-function observe(data) {
-    if(typeof data!=='object'){
-        return
-    }else{
-        return new Observe(data)
-    }
-   
-}
 // Vue 的特点在data新增属性不能添加get和set，所以不能响应
