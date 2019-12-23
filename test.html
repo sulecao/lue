@@ -14,17 +14,17 @@
         <!-- 插值绑定 -->
         <p>{{name}}</p>
         <!-- 指令解析 -->
-        <p k-text="name"></p>
+        <p v-text="name"></p>
         <p>{{age}}</p>
         <p>
           {{doubleAge}}
         </p>
         <!-- 双向绑定 -->
-        <input type="text" k-model="name" />
+        <input type="text" v-model="name" />
         <!-- 事件处理 -->
         <button @click="changeName">呵呵</button>
         <!-- html内容解析 -->
-        <div k-html="html"></div>
+        <div v-html="html"></div>
       </div>
 </body>
 <script>
