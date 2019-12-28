@@ -1,4 +1,5 @@
-class Compile{
+import Watcher from './watcher'
+export default class Compile{
     constructor(el,vm){
         this.$el = el
         this.$vm = vm;

@@ -1,9 +1,10 @@
-
+import Compile from './compile'
+import Dep from './dep'
 class Vue{
   constructor(options){
     this.$options = options
     this.$data = options.data
-    // 观察data属性
+
     this.observe(this.$data);
 
     new Compile(options.el, this);
@@ -11,7 +12,6 @@ class Vue{
     if (options.created) {
         options.created.call(this);
     }
-
   }
 
   observe(data){
@@ -62,32 +62,7 @@ class Vue{
     })
   }
 }
-
+window.Vue = Vue
 // Vue 的特点在data新增属性不能添加get和set，所以不能响应
 
-class Dep{
-  constructor(){
-    this.deps = []
-  }
-  addDep(watch){
-   this.deps.push(watch)
-  }
-  notify(){
-    this.deps.forEach(item=>item.update())
-  }
-}
 
-class Watcher{
-  constructor(vm,key,cb){
-    this.vm = vm
-    this.key = key
-    this.cb = cb
-
-    Dep.target = this;
-    this.vm[this.key]; // 触发getter，添加依赖
-    Dep.target = null;
-  }
-  update(){
-    this.cb.call(this.vm,this.vm[this.key])
-  }
-}
